@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Box, Button, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, Input, Spinner, Stack, WrapItem } from '@chakra-ui/react'
 import { authService } from '../../config/service-config'
 import LoginData from '../../models/LoginData'
 import { useNavigate } from 'react-router-dom'
-import { DASHBOARD_PATH, LOGIN_PATH } from '../../config/route-config'
+import { DASHBOARD_PATH } from '../../config/route-config'
 import { useDispatch } from 'react-redux'
 import { authAction } from '../../redux/actions'
 import { ToastContainer, toast } from 'react-toastify'
@@ -44,7 +44,6 @@ const LoginPage = () => {
     let res = await authService.login(data as LoginData)
     if(res){
       dispatch(authAction(res))
-      console.log('token: ',res)
       reset()
       navigate(DASHBOARD_PATH)
     } else {
