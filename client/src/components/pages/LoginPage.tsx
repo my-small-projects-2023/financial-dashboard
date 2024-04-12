@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Box, Button, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, Input, Spinner, Stack, WrapItem } from '@chakra-ui/react'
+import { authService } from '../../config/service-config'
+import LoginData from '../../models/LoginData'
+import { useNavigate } from 'react-router-dom'
+import { DASHBOARD_PATH, LOGIN_PATH } from '../../config/route-config'
+import { useDispatch } from 'react-redux'
+import { authAction } from '../../redux/actions'
+import { ToastContainer, toast } from 'react-toastify'
+import SigninData from '../../models/SigninData'
 
 
 type Inputs = {
@@ -10,29 +18,91 @@ type Inputs = {
   lastName: string
 }
 
+const OK_STATUS_CODE = 200;
+const BAD_REQUEST_STATUS_CODE = 400;
+const ACCOUNT_CREATED_MESSAGE = 'New account was successfily created. Please log in!';
+const WRONG_CREDENTIALS_MESSAGE = 'Wrong Credentials';
+const ERROR_MESSAGE = 'Unknown error occurred'
+
 const LoginPage = () => {
 
+  const dispatch = useDispatch<any>();
+  const navigate = useNavigate()
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = (data) => isLogin ? handleLogin(data) : handleSignUp(data)
 
-  const handleLogin = (data: any) => {
-    console.log(data)
+  const handleLogin = async (data: any) => {
+    setIsLoading(true)
+    let res = await authService.login(data as LoginData)
+    if(res){
+      dispatch(authAction(res))
+      console.log('token: ',res)
+      reset()
+      navigate(DASHBOARD_PATH)
+    } else {
+      toast.error(WRONG_CREDENTIALS_MESSAGE, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        theme: "light"
+      })
+    }
+    setIsLoading(false)
   }
 
-  const handleSignUp = (data: any) => {
+  const handleSignUp = async (data: any) => {
     console.log(data)
+    let message = ACCOUNT_CREATED_MESSAGE;
+    setIsLoading(true)
+    let res = await authService.signup(data as SigninData)
+    if(res === OK_STATUS_CODE){
+      reset()
+      toast.success(message, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        theme: "light"
+      })
+      setIsLogin(!isLoading)
+    } else {
+      if(res === BAD_REQUEST_STATUS_CODE){
+        message = WRONG_CREDENTIALS_MESSAGE
+      } else {
+        message = ERROR_MESSAGE
+      }
+      toast.error(message, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        theme: "light"
+      })
+    }
+
+    setIsLoading(false)
   }
  
-  
+
     return (
-      <Box display="flex" justifyContent="center" >
+    <>
+      <ToastContainer />
+        <Box display="flex" justifyContent="center" >
          <Stack spacing={3} width={300}>
          <Box display="flex" justifyContent="center" >
           <Heading as='h2' size='xl'>
@@ -97,7 +167,6 @@ const LoginPage = () => {
                   : <FormHelperText>Please enter your password.</FormHelperText>
                 }
               </FormControl>
-            {/* <button type='submit'>Submit</button> */}
             <WrapItem paddingX={5} marginY={4}>
               <Button colorScheme='blue' type='submit' style={{width: '100%'}} >{isLogin ? "Login" : "Signup"}</Button>
             </WrapItem>
@@ -109,6 +178,7 @@ const LoginPage = () => {
           }
         </Stack>
       </Box>
+    </>
     )
   }
 

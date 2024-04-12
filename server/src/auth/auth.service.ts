@@ -6,6 +6,7 @@ import { Model } from "mongoose";
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from "@nestjs/jwt";
+import { ResponseAccountDto } from "./dto/response-account.dto";
 
 const DEFAULT_CURRENCY = ['USD', 'EURO', 'NIS'];
 
@@ -30,7 +31,7 @@ export class AuthService {
         return createdAccount;
       }
     
-    async login(loginAccountDto: LoginAccountDto): Promise<{access_token: string}> {
+    async login(loginAccountDto: LoginAccountDto): Promise<ResponseAccountDto> {
         let account = await this.accountModel.findOne({email: loginAccountDto.email});
         if(!account){
             throw new UnauthorizedException();
@@ -40,8 +41,14 @@ export class AuthService {
             throw new UnauthorizedException();
         }
         const payload = { sub: account._id , username: account.firstName };
-        return {
-            access_token: await this.jwtService.signAsync(payload),
+        const access_token = await this.jwtService.signAsync(payload)
+        return {    
+            id: account.id,
+            firstName: account.firstName,
+            lastName: account.lastName,
+            email: account.email,
+            currencies: account.currencies,
+            token: access_token
         };
     }
 

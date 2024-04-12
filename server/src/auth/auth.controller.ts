@@ -3,6 +3,7 @@ import { CreateAccountDto } from "src/auth/dto/create-account.dto"
 import { LoginAccountDto } from "./dto/login-account.dto"
 import { AuthService } from "./auth.service"
 import { AuthGuard } from "./auth.guard";
+import { ResponseAccountDto } from "./dto/response-account.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -17,11 +18,10 @@ export class AuthController {
         newAccount,});
   }
 
-  @Put("login")
-  async login(@Body() loginAccountDto: LoginAccountDto): Promise<{access_token: string}> {
+  @Post("login")
+  async login(@Body() loginAccountDto: LoginAccountDto): Promise<ResponseAccountDto> {
     return await this.authService.login(loginAccountDto);
   }
-
 
   @UseGuards(AuthGuard)
   @Get("profile")

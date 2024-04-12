@@ -17,7 +17,7 @@ export const DASHBOARD_PATH = '/dashboard'
 export const NOT_FOUND_PATH = '*'
 
 export const ROUTES: RouteType[] = [
-    {path: HOME_PAGE_PATH, label: 'Home', element: <HomePage/>, authenticated: false, icon: <IoHomeSharp />},
+    {path: HOME_PAGE_PATH, label: 'Home', element: <HomePage/>, authenticated: false, icon: <IoHomeSharp />, isShown: true},
     {path: LOGIN_PATH, label: 'Login', element: <LoginPage/>, authenticated: false, icon: <BiLogIn/>},
     {path: DASHBOARD_PATH, label: 'Dashboard', element: <DashboardPage/>, authenticated: true, icon: <RxDashboard/>},
     {path: LOGOUT_PATH, label: 'Logout', element: <LogoutPage/>, authenticated: true, icon: <BiLogOut/>},

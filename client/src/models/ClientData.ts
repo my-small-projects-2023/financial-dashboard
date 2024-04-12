@@ -5,6 +5,7 @@ export default interface ClientData {
     lastName: string,
     email: string,
     currencies: string[],
+    token: string
 }
 
 export const emptyClientData: ClientData = {
@@ -12,5 +13,6 @@ export const emptyClientData: ClientData = {
     firstName: "",
     lastName: "",
     email: "",
-    currencies: []
+    currencies: [],
+    token: ""
 }

@@ -5,11 +5,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ROUTES } from './config/route-config';
 import { Spinner, Box } from '@chakra-ui/react';
 
+
 const App = () => {
 
   const [isLoading, setIsLoading] = useState(false);
-
-
 
   return (
     <BrowserRouter>

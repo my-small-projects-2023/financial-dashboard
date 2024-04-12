@@ -5,5 +5,6 @@ export default interface outeType {
     label: string,
     element: ReactNode,
     authenticated: boolean,
+    isShown?: boolean,
     icon?: ReactNode 
 }
