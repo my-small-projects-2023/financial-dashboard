@@ -15,7 +15,7 @@ const NavigatorDesktop = ({items}: Props) => {
       <Tabs paddingY={3}>
   <TabList paddingLeft={1}>
     {items.map(e => <Tab key={e.path}><Link to={e.path}>{e.label}</Link></Tab>)}
-    <div style={{width: '70vw'}}></div>
+    <div style={{width: '75vw'}}></div>
     <ColorModeSwitch />
   </TabList>
 </Tabs>
