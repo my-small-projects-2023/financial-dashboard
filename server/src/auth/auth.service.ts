@@ -3,7 +3,7 @@ import { LoginAccountDto } from "./dto/login-account.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Account } from "src/auth/schemas/account.schema";
 import { Model } from "mongoose";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from "@nestjs/jwt";
 
@@ -15,14 +15,17 @@ export class AuthService {
     constructor(@InjectModel(Account.name) private accountModel: Model<Account>, 
         private jwtService: JwtService) {}
 
-    async signup(createAccounDto: CreateAccountDto): Promise<Account> {
+    async signup(createAccountDto: CreateAccountDto): Promise<Account> {
         let createdAccount = null;
-        let existAccount = await this.accountModel.findOne({email: createAccounDto.email});
-        if(!existAccount){
-            const hash = await bcrypt.hash(createAccounDto.password, 10);
-            createdAccount = new this.accountModel({...createAccounDto, password: hash, currencies: DEFAULT_CURRENCY});
-            createdAccount.save();
+        let existAccount = await this.accountModel.findOne({email: createAccountDto.email});
+
+        if(existAccount){
+            throw new BadRequestException(`Account with email: ${createAccountDto.email} already exist`);
         }
+
+        const hash = await bcrypt.hash(createAccountDto.password, 10);
+        createdAccount = new this.accountModel({...createAccountDto, password: hash, currencies: DEFAULT_CURRENCY});
+        createdAccount.save();
 
         return createdAccount;
       }

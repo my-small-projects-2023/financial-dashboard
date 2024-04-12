@@ -6,19 +6,19 @@ export type AccountDocument = HydratedDocument<Account>;
 
 @Schema()
 export class Account {
-    @Prop()
+    @Prop(({ required: true }))
     firstName: string;
 
-    @Prop()
+    @Prop(({ required: true }))
     lastName: string;
 
-    @Prop()
+    @Prop(({ required: true }))
     email: string;
 
-    @Prop()
+    @Prop(({ required: true }))
     password: string;
 
-    @Prop()
+    @Prop(({ required: true }))
     currencies: string[];
 }
 

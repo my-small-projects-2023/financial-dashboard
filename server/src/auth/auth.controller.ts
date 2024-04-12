@@ -11,11 +11,6 @@ export class AuthController {
   @Post("signup")
   async signup(@Res() response: any, @Body() createAccountDto: CreateAccountDto): Promise<string> {
     const newAccount = await this.authService.signup(createAccountDto);
-    if(!newAccount){
-        return response.status(HttpStatus.BAD_REQUEST).json({
-            message: `Account with email: ${createAccountDto.email} already exist`
-        })
-    }
 
     return response.status(HttpStatus.OK).json({
         message: 'New account was created',
@@ -24,14 +19,7 @@ export class AuthController {
 
   @Put("login")
   async login(@Body() loginAccountDto: LoginAccountDto): Promise<{access_token: string}> {
-
     return await this.authService.login(loginAccountDto);
-  }
-
-  @UseGuards(AuthGuard)
-  @Put("update-password")
-  async updatePassword(@Req() request: any, @Body() oldPassword: string, newPassword: string){
-    const res = this.authService.updatePassword(request.account.sub, oldPassword, newPassword);
   }
 
 
@@ -39,11 +27,6 @@ export class AuthController {
   @Get("profile")
   async getProfile(@Req() request: any, @Res() response: any) {
     const profile = await this.authService.getProfile(request.account.sub)
-    if(!profile){
-      return response.status(HttpStatus.UNAUTHORIZED).json({
-        message: `user unauthorized`
-    })
-    }
     return response.status(HttpStatus.OK).json({
       message: "user",
       profile
