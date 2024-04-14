@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from "@nestjs/jwt";
 import { ResponseAccountDto } from "./dto/response-account.dto";
 
-const DEFAULT_CURRENCY = ['USD', 'EURO', 'NIS'];
+const DEFAULT_CURRENCY = ['USD', 'EUR', 'ILS'];
 
 @Injectable()
 export class AuthService {
@@ -60,20 +60,5 @@ export class AuthService {
         
         return account;
     }
-
-    async updatePassword(userId: string, oldPassword: string, newPassword: string){
-        let account = await this.accountModel.findById(userId)
-        if(!account){
-            throw new UnauthorizedException();
-        }
-        const passwordMatch = await bcrypt.compare(oldPassword, account.password);
-        if(!passwordMatch){
-            throw new UnauthorizedException();
-        }
-        const hash = await bcrypt.hash(newPassword, 10);
-        const accountUpdate = new this.accountModel({...account, password: hash});
-        accountUpdate.save();
-    }
- 
 
 }

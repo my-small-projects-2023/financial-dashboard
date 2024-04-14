@@ -2,7 +2,6 @@ import { Body, Controller, Get, HttpStatus, Post, Put, Req, Request, Res, UseGua
 import { CreateAccountDto } from "src/auth/dto/create-account.dto"
 import { LoginAccountDto } from "./dto/login-account.dto"
 import { AuthService } from "./auth.service"
-import { AuthGuard } from "./auth.guard";
 import { ResponseAccountDto } from "./dto/response-account.dto";
 
 @Controller("auth")
@@ -23,13 +22,4 @@ export class AuthController {
     return await this.authService.login(loginAccountDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Get("profile")
-  async getProfile(@Req() request: any, @Res() response: any) {
-    const profile = await this.authService.getProfile(request.account.sub)
-    return response.status(HttpStatus.OK).json({
-      message: "user",
-      profile
-    });
-  }
 }
