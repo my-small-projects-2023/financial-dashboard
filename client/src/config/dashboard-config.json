@@ -1,0 +1,28 @@
+{
+    "rateDiagramColors": [
+        "#8533FF",
+        "#FF5733",
+        "#33FF57",
+        "#5733FF",
+        "#FF3385",
+        "#33FF85",
+        "#FFA333",
+        "#33FFA3",
+        "#A333FF",
+        "#FF33CA"
+      ],
+      
+      "popularCurrencies": [
+        "ILS", 
+        "EUR", 
+        "BTC", 
+        "AUD", 
+        "GBP", 
+        "JPY", 
+        "CAD", 
+        "CNY",
+        "NZD",
+        "USD"
+      ] 
+
+}

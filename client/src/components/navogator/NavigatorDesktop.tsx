@@ -16,19 +16,19 @@ const NavigatorDesktop = ({items}: Props) => {
   const getRouteIndexCallback = React.useCallback(getRouteIndex, [items, location])
   const tabNumber = getRouteIndexCallback(items, location.pathname);
   const [activeTab, setActiveTab] = useState(0);
+  
 
   useEffect(() => {
     setActiveTab(tabNumber)
   }, [tabNumber])
-  console.log(tabNumber)
 
   return (
     <Box >
       <Tabs paddingY={3} index={activeTab} onChange={(index) => setActiveTab(index)}>
         <TabList paddingLeft={1}>
             {items.map(e => <Link key={e.path} to={e.path}><Tab >{e.label}</Tab></Link>)}
-            <div style={{width: '75vw'}}></div>
-            <ColorModeSwitch />
+            <div style={{width: '70vw'}}></div>
+            <Box paddingRight={5}><ColorModeSwitch /></Box>
         </TabList>
       </Tabs>
     </Box>

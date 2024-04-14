@@ -34,7 +34,6 @@ export class AuthServiceImpl implements AuthService {
         })
         .catch(err => {
             console.log(err.message)
-            console.log(err.response.status)
             return err.response.status;
         }) 
 

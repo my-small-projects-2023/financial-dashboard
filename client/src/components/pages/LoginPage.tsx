@@ -22,7 +22,7 @@ const OK_STATUS_CODE = 200;
 const BAD_REQUEST_STATUS_CODE = 400;
 const ACCOUNT_CREATED_MESSAGE = 'New account was successfily created. Please log in!';
 const WRONG_CREDENTIALS_MESSAGE = 'Wrong Credentials';
-const ERROR_MESSAGE = 'Unknown error occurred'
+const ERROR_MESSAGE = 'Error occurred'
 
 const LoginPage = () => {
 
