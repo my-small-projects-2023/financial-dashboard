@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpStatus, Post, Put, Req, Request, Res, UseGua
 import { ProfileService } from "./profile.service";
 import { Account } from "src/auth/schemas/account.schema";
 import { AuthGuard } from "src/auth/auth.guard";
+import { RequestCurrenciesDto } from "./dto/request-currencies.dto";
 
 @Controller("profile")
 export class ProfileController {
@@ -19,8 +20,8 @@ export class ProfileController {
 
   @UseGuards(AuthGuard)
   @Put()
-  async updateProfile(@Req() request: any, @Res() response: any, @Body() currencies: string[]): Promise<Account> {
-    const profile = await this.profileService.updateProfile(request.account.sub, currencies)
+  async updateProfile(@Req() request: any, @Res() response: any, @Body() currencies: RequestCurrenciesDto): Promise<Account> {
+    const profile = await this.profileService.updateProfile(request.account.sub, currencies.currencies)
     return response.status(HttpStatus.OK).json({
         message: "user",
         profile
