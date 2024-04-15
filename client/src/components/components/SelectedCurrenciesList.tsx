@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Badge, CloseButton, Table, TableContainer, Tbody, Td, Tr } from '@chakra-ui/react'
+import { Badge, CloseButton, Stat, StatArrow, StatHelpText, StatNumber, Table, TableContainer, Tbody, Td, Tr } from '@chakra-ui/react'
 import { useSelector } from 'react-redux';
 import { StateType } from '../../redux/store';
 import RealExchangeDataModel from '../../models/RealExchangeDataModel';
@@ -40,11 +40,15 @@ const SelectedCurrenciesList = ({data, updateProfile}: Props) => {
         return <Tr key={i}>
         <Td style={{fontWeight: 'bold'}}>{e.currency}</Td>
         <Td>{parseDouble(e.currentValue)}</Td>
-        <Td >{parseDouble(e.prevValue - e.currentValue)}</Td>
         <Td >
-          <Badge colorScheme={getPercentage(e.prevValue, e.currentValue) >= 0 ? 'green' : 'red'} padding={2} borderRadius={10}>
-            {getPercentage(e.prevValue, e.currentValue) >= 0 ? '↑' : '↓'} {Math.abs(getPercentage(e.prevValue, e.currentValue))} %
-          </Badge>
+          {parseDouble(e.prevValue - e.currentValue)}</Td>
+        <Td >
+          <Stat>
+          <StatHelpText>
+      <StatArrow type={getPercentage(e.prevValue, e.currentValue) >= 0 ? 'increase' : 'decrease'} />
+      {Math.abs(getPercentage(e.prevValue, e.currentValue))} %
+    </StatHelpText>
+          </Stat>
         </Td>
         <Td><CloseButton onClick={() => handleUpdate(e.currency)} isDisabled={DEFAULT_BASE_CURRENCY === e.currency}/></Td>
       </Tr>

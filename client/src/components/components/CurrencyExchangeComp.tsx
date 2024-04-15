@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormErrorMessage, FormHelperText, FormLabel, Heading, Input, Select, Spinner, Stack, WrapItem } from '@chakra-ui/react';
+import { Box, Button, FormControl, Text, FormHelperText, FormLabel, Heading, Input, Select, Spinner, Stack, WrapItem, CardBody, Card, StackDivider, CardHeader, TableContainer, Table, TableCaption, Tbody, Td, Tfoot, Th, Thead, Tr, CloseButton } from '@chakra-ui/react';
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
@@ -6,11 +6,20 @@ import CurrencyModel from '../../models/CurrencyModel';
 import { useSelector } from 'react-redux';
 import { StateType } from '../../redux/store';
 import { dashboardService } from '../../config/service-config';
+import CurrencyExchangeResultComp from './CurrencyExchangeResultComp';
 
 type Inputs = {
     base: string,
     target: string,
     amount: number
+}
+
+export interface ConversionResult {
+  result: string;
+  rate: string;
+  target: string;
+  base: string;
+  amount: number;
 }
 
 const ERROR_MESSAGE = 'Error occurred, try again or choose another input option'
@@ -19,7 +28,7 @@ const CurrencyExchangeComp = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const popularCurrencies: CurrencyModel[] = useSelector<StateType, CurrencyModel[]>(state => state.popularCurrencies);
-    const [result, setResult] = useState("");
+    const [conversionResult, setConversionResult] = useState<ConversionResult | null>(null)
 
     const { reset, register, handleSubmit, formState: { errors } } = useForm<Inputs>()
     const onSubmit: SubmitHandler<Inputs> = (data) => convert(data)
@@ -28,8 +37,10 @@ const CurrencyExchangeComp = () => {
         setIsLoading(true)
         let res = await dashboardService.convertCurrencies(data.base, data.target, data.amount)
         if(res){
-            setResult(res)
-            reset()
+          const { conversion_result, conversion_rate, target_code, base_code } = res;
+          setConversionResult({result: conversion_result, rate: conversion_rate, 
+            target: target_code, base: base_code, amount: data.amount})
+          reset()
         } else {
           toast.error(ERROR_MESSAGE, {
             position: "top-center",
@@ -42,7 +53,10 @@ const CurrencyExchangeComp = () => {
           })
         }
         setIsLoading(false)
-        console.log('RESULT',res)
+    }
+
+    const handleClose = () => {
+      setConversionResult(null)
     }
     
 
@@ -56,7 +70,12 @@ const CurrencyExchangeComp = () => {
             Currency Exchange
           </Heading>
         </Box>
-          {
+        <>
+        {
+          !conversionResult 
+          ? (
+            <>
+                      {
             isLoading 
             ? (
             <Box display="flex" justifyContent="center" paddingTop={10}>
@@ -70,6 +89,8 @@ const CurrencyExchangeComp = () => {
             </Box>
             ) 
             : (
+              <Card>
+              <CardBody>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl  isInvalid={!!errors.target} marginY={4}>
                 <FormLabel>Base</FormLabel >
@@ -100,8 +121,16 @@ const CurrencyExchangeComp = () => {
             </WrapItem>
 
             </form>
+            </CardBody>
+            </Card>
+
             )
           }
+            </>
+          ) 
+          : (<CurrencyExchangeResultComp close={handleClose} conversionResult={conversionResult}/>)
+        }
+        </>
         </Stack>
       </Box>
     </>

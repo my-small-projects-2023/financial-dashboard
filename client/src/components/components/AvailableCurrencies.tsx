@@ -1,4 +1,4 @@
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, Stat, StatArrow, StatGroup, StatHelpText, StatLabel, StatNumber } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { StateType } from '../../redux/store';
@@ -33,8 +33,31 @@ const AvailableCurrencies = ({data, updateProfile}: Props) => {
    <Box display="flex" justifyContent="center" flexWrap={'wrap'}>
    {
     currentData.map((e, i) => {
-        return  <Box key={i} padding={2}>
-        <Button
+        return  <Box key={i} paddingX={10} margin={3}             
+          border='1px'
+          borderRadius={15}
+        borderColor={getPercentage(e.prevValue, e.currentValue) >= 0 ? 'green.500' : 'red.500'}
+        onClick={() => handleUpdate(e.currency)}>
+          <StatGroup>
+  <Stat>
+    <StatLabel>{DEFAULT_BASE_CURRENCY} / {e.currency}</StatLabel>
+    <StatNumber>{parseDouble(e.currentValue)}</StatNumber>
+    <StatHelpText>
+      <StatArrow type={getPercentage(e.prevValue, e.currentValue) >= 0 ? 'increase' : 'decrease'} />
+      {Math.abs(getPercentage(e.prevValue, e.currentValue))} %
+    </StatHelpText>
+  </Stat>
+
+  {/* <Stat>
+    <StatLabel>Clicked</StatLabel>
+    <StatNumber>45</StatNumber>
+    <StatHelpText>
+      <StatArrow type='decrease' />
+      9.05%
+    </StatHelpText>
+  </Stat> */}
+</StatGroup>
+        {/* <Button
             size='lg'
             height='60px'
             width='180px'
@@ -46,7 +69,7 @@ const AvailableCurrencies = ({data, updateProfile}: Props) => {
           {DEFAULT_BASE_CURRENCY} / {e.currency}<br/>
           {parseDouble(e.currentValue)}<br/>
           {getPercentage(e.prevValue, e.currentValue) >= 0 ? '↑' : '↓'} {Math.abs(getPercentage(e.prevValue, e.currentValue))} %
-        </Button>
+        </Button> */}
       </Box>
     })
    }
