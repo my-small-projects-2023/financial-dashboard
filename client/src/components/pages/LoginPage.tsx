@@ -6,9 +6,9 @@ import LoginData from '../../models/LoginData'
 import { useNavigate } from 'react-router-dom'
 import { DASHBOARD_PATH } from '../../config/route-config'
 import { useDispatch } from 'react-redux'
-import { authAction } from '../../redux/actions'
 import { ToastContainer, toast } from 'react-toastify'
 import SigninData from '../../models/SigninData'
+import { authAction } from '../../redux/actions'
 
 
 type Inputs = {
@@ -170,7 +170,7 @@ const LoginPage = () => {
               <Button colorScheme='blue' type='submit' style={{width: '100%'}} >{isLogin ? "Login" : "Signup"}</Button>
             </WrapItem>
             <WrapItem paddingX={5} marginY={4}>
-              <Button onClick={() => setIsLogin(!isLogin)} colorScheme='teal' style={{width: '100%'}}>{isLogin ? "Other options" : "Go back"}</Button>
+              <Button onClick={() => setIsLogin(!isLogin)} colorScheme='teal' style={{width: '100%'}}>{isLogin ? "Signup" : "Login"}</Button>
             </WrapItem>
             </form>
             )

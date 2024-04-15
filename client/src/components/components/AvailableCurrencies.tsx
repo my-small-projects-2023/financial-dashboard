@@ -1,35 +1,51 @@
 import { Box, Button } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-import ClientData from '../../models/ClientData';
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import CurrencyModel from '../../models/CurrencyModel';
 import { StateType } from '../../redux/store';
+import RealExchangeDataModel from '../../models/RealExchangeDataModel';
+import ProfileData from '../../models/ProfileData';
+import { getPercentage, parseDouble } from '../../utils/functions';
+import { DEFAULT_BASE_CURRENCY } from '../services/DashboardServiceImpl';
 
-const AvailableCurrencies = () => {
+interface Props {
+  data: RealExchangeDataModel[],
+  updateProfile:(currencies: string[]) => void
+}
+const AvailableCurrencies = ({data, updateProfile}: Props) => {
 
-    const clientData: ClientData = useSelector<StateType, ClientData>(state => state.clientData);
-    const popularCurrencies: CurrencyModel[] = useSelector<StateType, CurrencyModel[]>(state => state.popularCurrencies);
-    const [data, setData] = useState<CurrencyModel[]>([]);
+    const profile: ProfileData = useSelector<StateType, ProfileData>(state => state.profileData);
+    const [currentData, setCurrentData] = useState<RealExchangeDataModel[]>([])
 
     useEffect(() => {
-        const selectedData = popularCurrencies.filter(e => !clientData.currencies.includes(e.currency));
-        setData(selectedData)
-    }, [popularCurrencies, clientData])
+        if(profile.email){
+          const selectedData = data.filter(e => !profile.currencies.includes(e.currency));
+          setCurrentData(selectedData)
+        }
+    }, [profile])
+
+    const handleUpdate = (currency: string) => {
+      const currencies = [...profile.currencies]
+      currencies.push(currency)
+      updateProfile(currencies)
+    }
     
   return (
    <Box display="flex" justifyContent="center" flexWrap={'wrap'}>
    {
-    data.map((e, i) => {
+    currentData.map((e, i) => {
         return  <Box key={i} padding={2}>
         <Button
             size='lg'
-            height='50px'
+            height='60px'
             width='180px'
             border='1px'
-            borderColor='blue.500'
+            borderColor={getPercentage(e.prevValue, e.currentValue) >= 0 ? 'green.500' : 'red.500'}
+            onClick={() => handleUpdate(e.currency)}
+            style={{ fontSize: '14px', textAlign: 'left' }}
         >
-          {e.currency}<br/>
-          {e.value}
+          {DEFAULT_BASE_CURRENCY} / {e.currency}<br/>
+          {parseDouble(e.currentValue)}<br/>
+          {getPercentage(e.prevValue, e.currentValue) >= 0 ? '↑' : '↓'} {Math.abs(getPercentage(e.prevValue, e.currentValue))} %
         </Button>
       </Box>
     })

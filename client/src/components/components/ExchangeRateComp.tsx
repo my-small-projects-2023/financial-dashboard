@@ -1,6 +1,9 @@
 import { HStack, Tabs, TabList, Tab, Select, Text, useMediaQuery } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import ExchangeRate from './ExchangeRate'
+import CurrencyModel from '../../models/CurrencyModel';
+import { useSelector } from 'react-redux';
+import { StateType } from '../../redux/store';
 
 const DEFAULT_KEY: string = "FX_MONTHLY";
 const DAYLY_KEY: string = "FX_DAILY";
@@ -15,6 +18,7 @@ interface Props {
 const ExchangeRateComp = ({updateData}: Props) => {
 
     const isLaptopOrDesktop = useMediaQuery('(min-width: 900px)')[0];
+    const popularCurrencies: CurrencyModel[] = useSelector<StateType, CurrencyModel[]>(state => state.popularCurrencies);
   
     const [currentKey, setCurrentKey] = useState(DEFAULT_KEY)
     const [activeTab, setActiveTab] = useState(2);
@@ -33,12 +37,16 @@ const ExchangeRateComp = ({updateData}: Props) => {
               <Tab onClick={() => setCurrentKey(WEEKLY_KEY)}>Weekly</Tab>
               <Tab onClick={() => setCurrentKey(MONTHLY_KEY)}>Monthly</Tab>
               {
-                isLaptopOrDesktop ? (<div style={{width: '35vw'}}></div>) : (<br/>)
+                isLaptopOrDesktop ? (<div style={{width: '25vw'}}></div>) : (<br/>)
               }   
               <Text fontSize='xl' fontWeight='bold' paddingTop={1}>Base:</Text>   
               <HStack paddingX={5}>
                 <Select placeholder={DEFAULT_BASE_CURRENCY} isDisabled={true}>
-                  <option value='option1'>Option 1</option>
+                  {
+                    popularCurrencies.map((e, i) => {
+                      return <option value={e.currency} key={i}>{e.currency}</option>
+                    })
+                  }
                 </Select>
               </HStack>
            </TabList>

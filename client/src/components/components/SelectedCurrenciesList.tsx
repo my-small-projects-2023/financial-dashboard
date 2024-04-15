@@ -1,36 +1,52 @@
-import React, { useEffect, useState } from 'react'
-import { Box, CloseButton, Flex, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from '@chakra-ui/react'
-import ClientData from '../../models/ClientData';
+import { useEffect, useState } from 'react'
+import { Badge, CloseButton, Table, TableContainer, Tbody, Td, Tr } from '@chakra-ui/react'
 import { useSelector } from 'react-redux';
 import { StateType } from '../../redux/store';
-import CurrencyModel from '../../models/CurrencyModel';
+import RealExchangeDataModel from '../../models/RealExchangeDataModel';
+import { getPercentage, parseDouble } from '../../utils/functions';
+import ProfileData from '../../models/ProfileData';
 
 const DEFAULT_BASE_CURRENCY = "USD";
 
-const SelectedCurrenciesList = () => {
+interface Props {
+  data: RealExchangeDataModel[],
+  updateProfile: (currencies: string[]) => void 
+}
+
+const SelectedCurrenciesList = ({data, updateProfile}: Props) => {
 
 
-    const clientData: ClientData = useSelector<StateType, ClientData>(state => state.clientData);
-    const popularCurrencies: CurrencyModel[] = useSelector<StateType, CurrencyModel[]>(state => state.popularCurrencies);
-    const [data, setData] = useState<CurrencyModel[]>([]);
+  const profile: ProfileData = useSelector<StateType, ProfileData>(state => state.profileData);
+  const [currentData, setCurrentData] = useState<RealExchangeDataModel[]>([])
 
-    useEffect(() => {
-        const selectedData = popularCurrencies.filter(e => clientData.currencies.includes(e.currency));
-        setData(selectedData)
-    }, [popularCurrencies, clientData])
+  useEffect(() => {
+    if(profile.email){
+      const selectedData = data.filter(e => profile.currencies.includes(e.currency));
+      setCurrentData(selectedData)
+    }
+  }, [profile])
+
+  const handleUpdate = (currency: string) => {
+    const currencies = profile.currencies.filter(e => e !== currency);
+    updateProfile(currencies);
+  }
 
   return (
     <>
     <TableContainer>
   <Table variant='simple' size='sm'>
     <Tbody>
-      {data.map((e, i) => {
+      {currentData.map((e, i) => {
         return <Tr key={i}>
-        <Td>{e.currency}</Td>
-        <Td>{e.value}</Td>
-        <Td isNumeric>25.4</Td>
-        <Td>up/down 30%</Td>
-        <Td><CloseButton onClick={() => {}} isDisabled={DEFAULT_BASE_CURRENCY === e.currency}/></Td>
+        <Td style={{fontWeight: 'bold'}}>{e.currency}</Td>
+        <Td>{parseDouble(e.currentValue)}</Td>
+        <Td >{parseDouble(e.prevValue - e.currentValue)}</Td>
+        <Td >
+          <Badge colorScheme={getPercentage(e.prevValue, e.currentValue) >= 0 ? 'green' : 'red'} padding={2} borderRadius={10}>
+            {getPercentage(e.prevValue, e.currentValue) >= 0 ? '↑' : '↓'} {Math.abs(getPercentage(e.prevValue, e.currentValue))} %
+          </Badge>
+        </Td>
+        <Td><CloseButton onClick={() => handleUpdate(e.currency)} isDisabled={DEFAULT_BASE_CURRENCY === e.currency}/></Td>
       </Tr>
       })}
     </Tbody>

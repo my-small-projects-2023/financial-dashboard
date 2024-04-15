@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
-import LoginData from "../../models/LoginData";
-import SigninData from "../../models/SigninData";
-import ClientData from "../../models/ClientData";
+import LoginData from "../../../models/LoginData";
+import SigninData from "../../../models/SigninData";
+import ClientData from "../../../models/ClientData";
 
 export default interface AuthService {
 

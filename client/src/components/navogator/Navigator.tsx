@@ -10,13 +10,13 @@ import { useSelector } from 'react-redux'
 
 const Navigator = () => {
 
-    const clientData: ClientData = useSelector<StateType, ClientData>(state => state.clientData)
+    const profile: ClientData = useSelector<StateType, ClientData>(state => state.clientData)
     const isLaptopOrDesktop = useMediaQuery('(min-width: 900px)')[0];
 
     const routes: RouteType[] = useMemo<RouteType[]>(() => 
-        { return ROUTES.filter(e => (clientData.email && e.authenticated) 
-            || (!clientData.email && !e.authenticated) && e.path !== NOT_FOUND_PATH || e.isShown);
-    }, [clientData]);
+        { return ROUTES.filter(e => (profile.email && e.authenticated) 
+            || (!profile.email && !e.authenticated) && e.path !== NOT_FOUND_PATH || e.isShown);
+    }, [profile]);
     
   return (
     <div>

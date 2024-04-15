@@ -1,12 +1,11 @@
 import { Reducer } from "react";
 import ClientData, { emptyClientData } from "../models/ClientData";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { AUTH_ACTION, CURRENCIES_ACTION, EXCHANGE_DATA_ACTION, POPULAR_CURRENCIES_ACTION } from "./actions";
+import { AUTH_ACTION, CURRENCIES_ACTION, EXCHANGE_DATA_ACTION, POPULAR_CURRENCIES_ACTION, UPDATE_PROFILE_ACTION } from "./actions";
 import { ExchangeData } from "../models/ExchangeRateData";
 import CurrencyModel from "../models/CurrencyModel";
-
-
-export const CLIENT_DATA_ITEM = "client-data"
+import { CLIENT_DATA_ITEM } from "../components/services/AuthServiceImpl";
+import ProfileData, { emptyProfileData } from "../models/ProfileData";
 
 export const clientDataReducer: Reducer<ClientData, PayloadAction<ClientData>> = 
 (clientData = localStorage.getItem(CLIENT_DATA_ITEM)?
@@ -17,6 +16,14 @@ export const clientDataReducer: Reducer<ClientData, PayloadAction<ClientData>> =
         return action.payload;
     }
     return clientData;
+}
+
+export const profileReducer: Reducer<ProfileData, PayloadAction<ProfileData>> = 
+(profileData = emptyProfileData, action): ProfileData => {
+    if (action.type === UPDATE_PROFILE_ACTION) {
+        return action.payload;
+    }
+    return profileData;
 }
 
 export const exchangeDataReducer: Reducer<ExchangeData[], PayloadAction<ExchangeData[]>> = 

@@ -15,14 +15,12 @@
       "popularCurrencies": [
         "ILS", 
         "EUR", 
-        "BTC", 
         "AUD", 
         "GBP", 
         "JPY", 
         "CAD", 
         "CNY",
-        "NZD",
-        "USD"
+        "NZD"
       ] 
 
 }

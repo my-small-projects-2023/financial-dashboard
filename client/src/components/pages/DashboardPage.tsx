@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react'
-import ExchangeRate from '../components/ExchangeRate'
 import { ExchangeData } from '../../models/ExchangeRateData'
 import { dashboardService } from '../../config/service-config'
-import { useDispatch, useSelector } from 'react-redux';
-import { HStack, Tabs, TabList, Tab, Heading, Box, Spinner, Select, useMediaQuery, Button, WrapItem, Text, Flex } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import { Heading, Box, Spinner, GridItem, Grid, useBreakpointValue } from '@chakra-ui/react';
 import { setCurrencies, setExchangeData, setPopularCurrencies } from '../../redux/actions';
 import dashboardData from '../../config/dashboard-config.json'
 import { ToastContainer, toast } from 'react-toastify'
 import CurrencyModel from '../../models/CurrencyModel';
 import ExchangeRateComp from '../components/ExchangeRateComp';
-import { CloseButton } from '@chakra-ui/react'
-import SelectedCurrenciesList from '../components/SelectedCurrenciesList';
-import ClientData from '../../models/ClientData';
-import { StateType } from '../../redux/store';
-import AvailableCurrencies from '../components/AvailableCurrencies';
+import RealTimeExchangeRateComp from '../components/RealTimeExchangeRateComp';
+import CurrencyExchangeComp from '../components/CurrencyExchangeComp';
 
 const DEFAULT_KEY: string = "FX_MONTHLY";
 const DEFAULT_BASE_CURRENCY = "USD";
@@ -24,14 +20,9 @@ const ERROR_MESSAGE = 'Error occurred'
 const DashboardPage = () => {
 
   const dispatch = useDispatch<any>();
-
-  // const isLaptopOrDesktop = useMediaQuery('(min-width: 900px)')[0];
-
   const [isLoading, setIsLoading] = useState(false);
   const [toCurrency, setToCurrency] = useState(DEFAULT_CURRENCY)
   const [currentKey, setCurrentKey] = useState(DEFAULT_KEY)
-  const [selectedCurrencies, setSelectedCurrencies] = useState([])
-
 
   useEffect(() => {
     getData()
@@ -97,8 +88,6 @@ const DashboardPage = () => {
     setIsLoading(false)
   }
 
-
-
   return (
     <div>
       <ToastContainer />
@@ -121,14 +110,30 @@ const DashboardPage = () => {
           </Box>
         ) 
       : (<>
-        <ExchangeRateComp updateData={updateData}/>
-        <SelectedCurrenciesList/>
-        <AvailableCurrencies/>
-       
-
-
-      </>)
-    }
+          <Grid
+            templateAreas={{
+              base: `"diagram diagram"
+                "exchange exchange"
+                "real-time real-time"`,
+              lg: `"diagram exchange"
+                "real-time real-time"`
+            }}
+            gridTemplateColumns={'70% 30%'}
+            gap='1'
+            fontWeight='bold'
+          >
+            <GridItem  area={'diagram'}>
+              <ExchangeRateComp updateData={updateData}/>
+            </GridItem>
+            <GridItem   area={'exchange'}>
+              <CurrencyExchangeComp/>
+            </GridItem>
+            <GridItem  area={'real-time'}>
+              <RealTimeExchangeRateComp/>
+            </GridItem>
+          </Grid>
+        </>)
+      }
     </div>
   )
 }
