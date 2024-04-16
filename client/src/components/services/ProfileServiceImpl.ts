@@ -39,7 +39,6 @@ class ProfileServiceImpl implements ProfileService {
             
         })
         .then(res => {
-            console.log(res.data)
             return res.data.profile as ProfileData
         })
         .catch(err => {

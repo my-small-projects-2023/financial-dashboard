@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Badge, CloseButton, Stat, StatArrow, StatHelpText, StatNumber, Table, TableContainer, Tbody, Td, Tr } from '@chakra-ui/react'
+import { CloseButton, Stat, StatArrow, StatHelpText, Table, TableContainer, Tbody, Td, Tr } from '@chakra-ui/react'
 import { useSelector } from 'react-redux';
 import { StateType } from '../../redux/store';
 import RealExchangeDataModel from '../../models/RealExchangeDataModel';
@@ -9,22 +9,22 @@ import ProfileData from '../../models/ProfileData';
 const DEFAULT_BASE_CURRENCY = "USD";
 
 interface Props {
-  data: RealExchangeDataModel[],
   updateProfile: (currencies: string[]) => void 
 }
 
-const SelectedCurrenciesList = ({data, updateProfile}: Props) => {
+const SelectedCurrenciesList = ({updateProfile}: Props) => {
 
 
   const profile: ProfileData = useSelector<StateType, ProfileData>(state => state.profileData);
   const [currentData, setCurrentData] = useState<RealExchangeDataModel[]>([])
+  const realTimeData: RealExchangeDataModel[] = useSelector<StateType, RealExchangeDataModel[]>(state => state.realTimeData);
 
   useEffect(() => {
-    if(profile.email){
-      const selectedData = data.filter(e => profile.currencies.includes(e.currency));
+    if(profile.email && realTimeData.length !== 0){
+      const selectedData = realTimeData.filter(e => profile.currencies.includes(e.currency));
       setCurrentData(selectedData)
     }
-  }, [profile])
+  }, [profile, realTimeData])
 
   const handleUpdate = (currency: string) => {
     const currencies = profile.currencies.filter(e => e !== currency);

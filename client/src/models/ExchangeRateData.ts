@@ -14,6 +14,13 @@ export interface RateData {
 }
 
 export interface ExchangeData {
-    date: string;
-    [key: string]: string;
+    [key: string]: any;
+
+
+    //date: string;
+    
+    // [key: string]: string;
+    // additionalData: { [key: string]: string }[];
+    //additionalData: { [key: string]: any }[];
+
 }

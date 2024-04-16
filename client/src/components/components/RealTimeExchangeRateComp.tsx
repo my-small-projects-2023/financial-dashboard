@@ -8,47 +8,42 @@ import RealExchangeDataModel from '../../models/RealExchangeDataModel';
 import { dashboardService, profileService } from '../../config/service-config';
 import { DEFAULT_BASE_CURRENCY } from '../services/DashboardServiceImpl';
 import { Box, Spinner } from '@chakra-ui/react';
-import { updateProfile } from '../../redux/actions';
+import { setRealTimeData, updateProfile } from '../../redux/actions';
 import { ToastContainer, toast } from 'react-toastify'
 import ProfileData from '../../models/ProfileData';
+
+const ERROR_MESSAGE = 'Error occurred'
+const INTERVAL = 5000
 
 const RealTimeExchangeRateComp = () => {
 
     const dispatch = useDispatch<any>();
+
     const [isLoading, setIsLoading] = useState(false)
     const popularCurrencies: CurrencyModel[] = useSelector<StateType, CurrencyModel[]>(state => state.popularCurrencies);
-    const [data, setData] = useState<RealExchangeDataModel[]>([]);
-    const ERROR_MESSAGE = 'Error occurred'
 
     useEffect(() => {
         getData()
     }, [popularCurrencies])
 
-    
+    const update = () => {
+      getData()
+    }
+
+    useEffect(() => {
+        const intervalId = setInterval(update, INTERVAL);
+        return () => {
+            clearInterval(intervalId)
+        }
+    }, [INTERVAL])
 
     const getData = async() => {
-        setIsLoading(true)
         const currencyList = popularCurrencies.map(e => e.currency)
         if(currencyList.length !== 0){
             const realExchangeData: RealExchangeDataModel[] 
             = await dashboardService.getRealTimeExchangeRate(DEFAULT_BASE_CURRENCY, currencyList)
-            setData(realExchangeData)
+            dispatch(setRealTimeData(realExchangeData))
         }
-        const profile: ProfileData | null = await profileService.getProfile();
-        if(profile){
-          dispatch(updateProfile(profile))
-        } else {
-          toast.error(ERROR_MESSAGE, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            theme: "light"
-          })
-        }
-        setIsLoading(false)
     }
 
     const updateProfileCurrencies = async(currencies: string[]) => {
@@ -88,8 +83,8 @@ const RealTimeExchangeRateComp = () => {
         ) 
         : (
             <>
-              <SelectedCurrenciesList data={data} updateProfile={updateProfileCurrencies}/>
-              <AvailableCurrencies data={data} updateProfile={updateProfileCurrencies}/>
+              <SelectedCurrenciesList updateProfile={updateProfileCurrencies}/>
+              <AvailableCurrencies updateProfile={updateProfileCurrencies}/>
             </>
         )
     }

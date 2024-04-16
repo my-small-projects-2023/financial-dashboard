@@ -8,7 +8,6 @@ import { ExchangeData } from '../../models/ExchangeRateData';
 const DAYS_FILTER = 5; // 5 days
 const WEEK_FILTER = 7; // 7 days
 const MONTH_FILTER = 30; // 30 days
-const MONTHES_FILTER = 90; //90 days
 const YEAR_WEEKLY_FILTER = 52; // 52 weeks in 1 year
 const YEARS_WEEKLY_FILTER = 260; // 260 weeks in 5 years
 const YEAR_MONTLY_FILTER = 60; // 60 month in 5 years
@@ -33,15 +32,17 @@ const ExchangeRate = ({currentKey}: Props) => {
     const [activeTab, setActiveTab] = useState(3);
 
     useEffect(() => {
-        setCurrentExchangeData(exchangeData)
+        if(exchangeData && exchangeData.length > 0){
+            setCurrentExchangeData(exchangeData)
+        }
     }, [exchangeData])
 
     useEffect(() => {
         if(filter){
             const filteredData = exchangeData.slice(0, filter)
-            setCurrentExchangeData(filteredData)
+            exchangeData && exchangeData.length > 0 && setCurrentExchangeData(filteredData)
         } else {
-            setCurrentExchangeData(exchangeData)
+            exchangeData && exchangeData.length > 0 && setCurrentExchangeData(exchangeData)
         }
 
 

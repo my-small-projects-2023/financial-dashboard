@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Heading } from '@chakra-ui/react'
 import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer } from 'recharts'
 import { ExchangeData } from '../../models/ExchangeRateData'
 import { useEffect, useState } from 'react'
@@ -17,14 +17,23 @@ const ExchangeDiagram = ({data}: Props) => {
         let keysSet: string[] = [];
         if (data && data.length > 0) {
             keysSet = Object.keys(data[0]);
-            keysSet.shift(); 
+            keysSet = keysSet.filter(e => e !== 'date')
         }
         setKeys(keysSet);
     }, [data]);
-    
+
   return (
     <Box>
-        <ResponsiveContainer width="95%" height={250}>
+        {
+            data.length === 0 
+            ? (<Box display="flex" justifyContent="center" paddingY={5}>
+                <Heading as='h3' size='lg'>
+                    No data found
+                </Heading>
+            </Box>) 
+            : (
+                <>
+                <ResponsiveContainer width="95%" height={250}>
             <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                     {keys.length !== 0 &&
@@ -60,6 +69,9 @@ const ExchangeDiagram = ({data}: Props) => {
                     ))}
             </AreaChart>
         </ResponsiveContainer>
+                </>
+            )
+        }
     </Box>
   )
 }

@@ -1,9 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import ClientData from "../models/ClientData"
-import { clientDataReducer, currencyReducer, exchangeDataReducer, popularCurrencyReducer, profileReducer } from "./reducers"
+import { clientDataReducer, currencyReducer, exchangeDataReducer, popularCurrencyReducer, profileReducer, realTimeDataReducer } from "./reducers"
 import { ExchangeData } from "../models/ExchangeRateData"
 import CurrencyModel from "../models/CurrencyModel"
 import ProfileData from "../models/ProfileData"
+import RealExchangeDataModel from "../models/RealExchangeDataModel"
 
 
 export type StateType = {
@@ -11,7 +12,8 @@ export type StateType = {
     profileData: ProfileData,
     exchangeData: ExchangeData[],
     currencies: CurrencyModel[],
-    popularCurrencies: CurrencyModel[]
+    popularCurrencies: CurrencyModel[],
+    realTimeData: RealExchangeDataModel[] 
 }
 
 const reducer = combineReducers<StateType> ({
@@ -20,6 +22,7 @@ const reducer = combineReducers<StateType> ({
     exchangeData: exchangeDataReducer as any,
     currencies: currencyReducer as any,
     popularCurrencies: popularCurrencyReducer as any,
+    realTimeData: realTimeDataReducer as any
 })
 
 export const store = configureStore({reducer,

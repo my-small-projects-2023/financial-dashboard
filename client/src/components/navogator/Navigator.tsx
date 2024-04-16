@@ -11,7 +11,9 @@ import { useSelector } from 'react-redux'
 const Navigator = () => {
 
     const profile: ClientData = useSelector<StateType, ClientData>(state => state.clientData)
-    const isLaptopOrDesktop = useMediaQuery('(min-width: 900px)')[0];
+    // TODO
+    //const isLaptopOrDesktop = useMediaQuery('(min-width: 900px)')[0];
+    const isLaptopOrDesktop = true
 
     const routes: RouteType[] = useMemo<RouteType[]>(() => 
         { return ROUTES.filter(e => (profile.email && e.authenticated) 

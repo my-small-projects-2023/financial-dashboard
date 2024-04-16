@@ -1,11 +1,12 @@
 import { Reducer } from "react";
 import ClientData, { emptyClientData } from "../models/ClientData";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { AUTH_ACTION, CURRENCIES_ACTION, EXCHANGE_DATA_ACTION, POPULAR_CURRENCIES_ACTION, UPDATE_PROFILE_ACTION } from "./actions";
+import { AUTH_ACTION, CURRENCIES_ACTION, EXCHANGE_DATA_ACTION, POPULAR_CURRENCIES_ACTION, REAL_TIME_DATA_ACTION, UPDATE_PROFILE_ACTION } from "./actions";
 import { ExchangeData } from "../models/ExchangeRateData";
 import CurrencyModel from "../models/CurrencyModel";
 import { CLIENT_DATA_ITEM } from "../components/services/AuthServiceImpl";
 import ProfileData, { emptyProfileData } from "../models/ProfileData";
+import RealExchangeDataModel from "../models/RealExchangeDataModel";
 
 export const clientDataReducer: Reducer<ClientData, PayloadAction<ClientData>> = 
 (clientData = localStorage.getItem(CLIENT_DATA_ITEM)?
@@ -39,4 +40,9 @@ export const currencyReducer: Reducer<CurrencyModel[], PayloadAction<CurrencyMod
 export const popularCurrencyReducer: Reducer<CurrencyModel[], PayloadAction<CurrencyModel[]>> = 
     (popularCurrencies = [], action): CurrencyModel[] => {
         return action.type === POPULAR_CURRENCIES_ACTION ? action.payload : popularCurrencies;
+}
+
+export const realTimeDataReducer: Reducer<RealExchangeDataModel[] , PayloadAction<RealExchangeDataModel[] >> = 
+    (realTimeData = [], action): RealExchangeDataModel[]  => {
+        return action.type === REAL_TIME_DATA_ACTION ? action.payload : realTimeData;
 }

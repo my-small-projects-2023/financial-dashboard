@@ -1,4 +1,3 @@
-import ClientData from "../../../models/ClientData";
 import ProfileData from "../../../models/ProfileData";
 
 export default interface ProfileService {

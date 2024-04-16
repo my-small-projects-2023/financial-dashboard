@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { ExchangeData } from '../../models/ExchangeRateData'
 import { dashboardService } from '../../config/service-config'
-import { useDispatch } from 'react-redux';
-import { Heading, Box, Spinner, GridItem, Grid, useBreakpointValue } from '@chakra-ui/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Heading, Box, Spinner, GridItem, Grid } from '@chakra-ui/react';
 import { setCurrencies, setExchangeData, setPopularCurrencies } from '../../redux/actions';
 import dashboardData from '../../config/dashboard-config.json'
 import { ToastContainer, toast } from 'react-toastify'
@@ -10,56 +10,101 @@ import CurrencyModel from '../../models/CurrencyModel';
 import ExchangeRateComp from '../components/ExchangeRateComp';
 import RealTimeExchangeRateComp from '../components/RealTimeExchangeRateComp';
 import CurrencyExchangeComp from '../components/CurrencyExchangeComp';
+import { DEFAULT_BASE_CURRENCY } from '../services/DashboardServiceImpl';
+import { StateType } from '../../redux/store';
+import ProfileData from '../../models/ProfileData';
 
 const DEFAULT_KEY: string = "FX_MONTHLY";
-const DEFAULT_BASE_CURRENCY = "USD";
-const DEFAULT_CURRENCY = "EUR";
 const ERROR_MESSAGE = 'Error occurred'
-
 
 const DashboardPage = () => {
 
+  const profile: ProfileData = useSelector<StateType, ProfileData>(state => state.profileData);
   const dispatch = useDispatch<any>();
   const [isLoading, setIsLoading] = useState(false);
-  const [toCurrency, setToCurrency] = useState(DEFAULT_CURRENCY)
   const [currentKey, setCurrentKey] = useState(DEFAULT_KEY)
 
   useEffect(() => {
-    getData()
-    getCurrency()
-  }, [])
+    if(profile.email){
+      getHistoryData()
+    }
+  }, [currentKey, profile])
+
+  useEffect(() => {
+    if(profile.email){
+      getCurrency()
+    }
+  }, [profile])
   
   const updateData = async(key: string) => {
     setCurrentKey(key);
-    await getData()
   }
 
-  const getData = async() => {
+  const getHistoryData = async() => {
     setIsLoading(true)
-    const data = await dashboardService.getExchangeRate(currentKey, DEFAULT_BASE_CURRENCY, DEFAULT_CURRENCY);
-    if(data) {
-      const keys: string[] = Object.keys(data);
-    const rateDataArray: ExchangeData[] = Object.entries(data[keys[1]]).map(([date, values]) => {
-      const typedValues = values as { [key: string]: string };
-      return {
-          date,
-          [toCurrency]: typedValues["4. close"].toLowerCase()
-      };
-    });
-    dispatch(setExchangeData(rateDataArray))
+    if(profile && profile.currencies.length > 0){
+       const data = await dashboardService.getExchangeRate(currentKey, DEFAULT_BASE_CURRENCY, profile.currencies[0]);
+      if(data) {
+        const initialArrayData: ExchangeData[]  = parseInitialData(data)
+        if(profile.currencies.length > 1){
+          const fullArrayData: ExchangeData[] = await getProfileHistoryData(initialArrayData)
+          dispatch(setExchangeData(fullArrayData))
+        } else {
+          dispatch(setExchangeData(initialArrayData))
+        } 
     } else {
-      toast.error(ERROR_MESSAGE, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        theme: "light"
-      })
+        toast.error(ERROR_MESSAGE, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          theme: "light"
+        })
+      }
     }
+    
     setIsLoading(false)
   }
+
+  const getProfileHistoryData = async(initialData: ExchangeData[]) => {
+    let res: ExchangeData[] = [];
+    for(let i = 1; i < profile.currencies.length; i++){
+      const data = await dashboardService.getExchangeRate(currentKey, DEFAULT_BASE_CURRENCY, profile.currencies[i]);
+      const parsedData: { [key: string]: any }[] = parseData(data, i);
+      res = initialData.flatMap((e) => {
+        return {
+          ...e,[profile.currencies[i]]: Object.values(parsedData[i])[0]
+        }
+      });
+    }
+    return res
+  }
+
+  const parseData = (data: any, index: number): ExchangeData[] => {
+    const keys: string[] = Object.keys(data);
+    const res: ExchangeData[] = Object.entries(data[keys[1]]).map(([date, values]) => {
+      const typedValues = values as { [key: string]: string };
+      return {
+        [profile.currencies[0]]: typedValues["4. close"].toLowerCase()
+      };
+    });
+
+    return res
+  }
+  const parseInitialData = (data: any): ExchangeData[] => {
+    const keys: string[] = Object.keys(data);
+    const res: ExchangeData[] = Object.entries(data[keys[1]]).map(([date, values]) => {
+      const typedValues = values as { [key: string]: string };
+      return {
+        date,
+        [profile.currencies[0]]: typedValues["4. close"].toLowerCase()
+      };
+    });
+
+    return res
+  };
 
   const getCurrency = async() => {
     setIsLoading(true);
@@ -139,20 +184,6 @@ const DashboardPage = () => {
 }
 
 export default DashboardPage
-
-  // const rateDataArray: RateData[] = Object.entries(currentData[keys[1]]).map(([date, values]) => {
-  //     const typedValues = values as { [key: string]: string }; // Type annotation for values
-  //     return {
-  //         date,
-  //         open: typedValues["1. open"],
-  //         high: typedValues["2. high"],
-  //         low: typedValues["3. low"],
-
-  //         close: typedValues["4. close"]
-  //     };
-  // });
-  // setData(prevData => [...prevData, {from: from, to: to, rateData: rateDataArray}]);
-
 
 
   

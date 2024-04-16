@@ -1,10 +1,12 @@
-import React from 'react'
+import { Heading, Box } from '@chakra-ui/react'
 
 const NotFoundPage = () => {
   return (
-    <div>
-      NOT FOUND 404.
-    </div>
+    <Box display="flex" justifyContent="center" paddingY={5}>
+    <Heading as='h3' size='lg'>
+      Not Found 404.
+    </Heading>
+  </Box>
   )
 }
 
