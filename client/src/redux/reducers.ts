@@ -4,7 +4,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { AUTH_ACTION, CURRENCIES_ACTION, EXCHANGE_DATA_ACTION, POPULAR_CURRENCIES_ACTION, REAL_TIME_DATA_ACTION, UPDATE_PROFILE_ACTION } from "./actions";
 import { ExchangeData } from "../models/ExchangeRateData";
 import CurrencyModel from "../models/CurrencyModel";
-import { CLIENT_DATA_ITEM } from "../components/services/AuthServiceImpl";
+import { CLIENT_DATA_ITEM } from "../services/AuthServiceImpl";
 import ProfileData, { emptyProfileData } from "../models/ProfileData";
 import RealExchangeDataModel from "../models/RealExchangeDataModel";
 

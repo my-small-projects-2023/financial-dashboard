@@ -1,4 +1,4 @@
-import ProfileData from "../../../models/ProfileData";
+import ProfileData from "../../models/ProfileData";
 
 export default interface ProfileService {
     getProfile(): Promise<ProfileData | null>;

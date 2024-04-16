@@ -6,7 +6,7 @@ import { StateType } from '../../redux/store';
 import CurrencyModel from '../../models/CurrencyModel';
 import RealExchangeDataModel from '../../models/RealExchangeDataModel';
 import { dashboardService, profileService } from '../../config/service-config';
-import { DEFAULT_BASE_CURRENCY } from '../services/DashboardServiceImpl';
+import { DEFAULT_BASE_CURRENCY } from '../../services/DashboardServiceImpl';
 import { Box, Spinner } from '@chakra-ui/react';
 import { setRealTimeData, updateProfile } from '../../redux/actions';
 import { ToastContainer, toast } from 'react-toastify'

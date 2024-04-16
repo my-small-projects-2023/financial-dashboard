@@ -5,7 +5,7 @@ import { StateType } from '../../redux/store';
 import RealExchangeDataModel from '../../models/RealExchangeDataModel';
 import ProfileData from '../../models/ProfileData';
 import { getPercentage, parseDouble } from '../../utils/functions';
-import { DEFAULT_BASE_CURRENCY } from '../services/DashboardServiceImpl';
+import { DEFAULT_BASE_CURRENCY } from '../../services/DashboardServiceImpl';
 
 interface Props {
   updateProfile:(currencies: string[]) => void

@@ -1,6 +1,6 @@
-import ClientData, { emptyClientData } from "../../models/ClientData";
-import LoginData from "../../models/LoginData";
-import SigninData from "../../models/SigninData";
+import ClientData, { emptyClientData } from "../models/ClientData";
+import LoginData from "../models/LoginData";
+import SigninData from "../models/SigninData";
 import AuthService from "./interfaces/AuthService";
 import axios from 'axios'
 

@@ -1,6 +1,6 @@
-import createAuthService from "../components/services/AuthServiceImpl"
-import createDashboardService from "../components/services/DashboardServiceImpl";
-import createProfileService from "../components/services/ProfileServiceImpl";
+import createAuthService from "../services/AuthServiceImpl"
+import createDashboardService from "../services/DashboardServiceImpl";
+import createProfileService from "../services/ProfileServiceImpl";
 
 
 export const AUTH_BASE_URL = 'http://localhost:3001/auth'

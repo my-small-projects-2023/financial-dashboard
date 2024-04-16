@@ -10,7 +10,7 @@ import CurrencyModel from '../../models/CurrencyModel';
 import ExchangeRateComp from '../components/ExchangeRateComp';
 import RealTimeExchangeRateComp from '../components/RealTimeExchangeRateComp';
 import CurrencyExchangeComp from '../components/CurrencyExchangeComp';
-import { DEFAULT_BASE_CURRENCY } from '../services/DashboardServiceImpl';
+import { DEFAULT_BASE_CURRENCY } from '../../services/DashboardServiceImpl';
 
 const DEFAULT_KEY: string = "FX_MONTHLY";
 const DEFAULT_CURRENCY = "EUR";

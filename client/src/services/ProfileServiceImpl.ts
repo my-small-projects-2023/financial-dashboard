@@ -1,8 +1,8 @@
 import axios from "axios";
-import ClientData, { emptyClientData } from "../../models/ClientData";
+import ClientData, { emptyClientData } from "../models/ClientData";
 import { CLIENT_DATA_ITEM } from "./AuthServiceImpl";
 import ProfileService from "./interfaces/ProfileService";
-import ProfileData from "../../models/ProfileData";
+import ProfileData from "../models/ProfileData";
 
 class ProfileServiceImpl implements ProfileService {
     

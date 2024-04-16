@@ -1,8 +1,8 @@
 import axios from "axios";
 import DashBoardService from "./interfaces/DashboardService";
 import { CLIENT_DATA_ITEM } from "./AuthServiceImpl";
-import ClientData, { emptyClientData } from "../../models/ClientData";
-import testData from '../../config/test-data.json'
+import ClientData, { emptyClientData } from "../models/ClientData";
+import testData from '../config/test-data.json'
 
   
 export const DEFAULT_BASE_CURRENCY = 'USD'
